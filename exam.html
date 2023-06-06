@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aevo Prep Academy</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        height: 100%;
+        margin: 0px;
+        background-color: #ffffff;
+        font-family: Arial, Helvetica, Georgia;
+      }
+      .thisDiv {
+        display: flex;
+        border-top: 1px black solid;
+        border-bottom: 1px black solid;
+        width: 100%;
+      }
+      .top-info-section {
+        top: 0;
+        height: 8vh;
+      }
+      .bottom-info-section {
+        bottom: 0;
+        height: 8vh;
+      }
+      .info-section {
+        position: fixed;
+        max-height: calc(8vh - 10px);
+        background-color: #092e0de8;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        padding: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #ffffff;
+      }
+      .middle-section {
+        position: absolute;
+        display: flex;
+        top: 8vh;
+        bottom: 8vh;
+        width: 100%;
+        background: linear-gradient(to right, #bddee8, #bddee88d);
+        height: 84vh;
+      }
+      #sourceMaterialPane {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        flex-shrink: 0;
+        flex-basis: 30%;
+        height: 84vh;
+        min-width: 20%;
+        max-width: 60%;
+        overflow-y: auto;
+      }
+      #QuestionPane {
+        flex-grow: 0;
+        flex-shrink: 1;
+        flex-basis: 70%;
+        height: 84vh;
+        max-width: 80%;
+        display: block;
+        padding-bottom: 10px;
+      }
+      #rpanrResize {
+        flex-grow: 0;
+        flex-shrink: 0;
+        background: #0d5a71;
+        width: 0.4rem;
+        cursor: col-resize;
+        margin: 0 0 0 auto;
+        height: 84vh;
+        left: 30%;
+        box-shadow: -1px 0 4px #888888, 1px 0 4px #888888;
+        z-index: 50;
+      }
+      #resizeHandle {
+        position: absolute;
+        bottom: 0px;
+        transform: translateX(-43%);
+        width: 40px;
+        height: 25px;
+        cursor: col-resize;
+        z-index: 60;
+      }
+      .no-select {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      #studentBlock {
+        height: 120%;
+        width: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3vh;
+      }
+      .sectionBlock {
+        height: 100%;
+        width: 10%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid #767676;
+        box-shadow: 1px 1px 5px #b7b7b7, -1px -1px 5px #b7b7b7;
+      }
+      .sectionBlock:hover{
+        border: 1px solid #ffffff;
+        box-shadow: 2px 2px 2px #ffffff, -2px -2px 2px #ffffff;
+        cursor: pointer;
+      }
+      #timeRemainingBlock {
+        height: 120%;
+        width: 30%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 10px;
+        font-size: 3vh;
+      }
+      #sourceMaterialHead {
+        background-color: #85bccc;
+        height: 10%;
+        min-height: 10%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+        position: sticky;
+        top: 0;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        overflow-x: hidden;
+        overflow-y: hidden;
+        white-space: nowrap;
+        font-size: 16px;
+        border-bottom: 1px rgb(54, 54, 54) solid;
+        box-shadow: 1px 3px 5px #888888;
+      }
+      #QuestionPaneHead {
+        background-color: #85bccc;
+        min-height: 12%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+        overflow-x: auto;
+        border-bottom: 1px rgb(54, 54, 54) solid;
+        box-shadow: 1px 3px 5px #888888;
+        position: relative;
+      }
+      #QuestionPanePrompt {
+        min-height: 8%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 10px;
+        border-bottom: 1px rgb(54, 54, 54) solid;
+        border-top: 1px rgb(54, 54, 54) solid;
+        box-shadow: 1px 3px 5px #888888;
+      }
+      .sourceMaterialParagraphs{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+      #sourceMaterialPane::-webkit-scrollbar {
+        width: 8px;
+      }
+      #sourceMaterialPane::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+      }
+      #sourceMaterialPane::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+      }
+      .sourceMaterialParagraphs:first-child {
+        margin-top: calc(10vh + 10px);
+      }
+      #QuestionPane::-webkit-scrollbar {
+        width: 8px;
+      }
+      #QuestionPane::-webkit-scrollbar-thumb {
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+      }
+      #QuestionPane::-webkit-scrollbar-track {
+        background-color: rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+      }
+      .sourceMaterialParagraphs:first-child {
+        margin-top: calc(10vh + 10px);
+      }
+      #nextButton,
+      #backButton {
+        background-color: #267e98;
+        color: white;
+        font-size: 18px;
+        padding: 10px 20px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0px 2px;
+        transition-duration: 0.4s;
+        border-radius: 5px;
+      }
+      #backButton:hover,
+      #nextButton:hover {
+        background-color: #165c71;
+      }
+      #questionLinksContainer {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        flex-grow: 1;
+      }
+      button {
+        padding: 8px 10px;
+        border: 1px;
+        border-radius: 6px;
+        margin-top: 4px;
+        margin-bottom: 4px;
+        margin-left: 6px;
+        margin-right: 6px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #ddd;
+      }
+      #QuestionPaneAnswers {
+        min-height: 30%;
+        width: 100%;
+        max-height: 100%;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        box-sizing: border-box;
+      }
+      .answerGrid {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-basis: 50%;
+        margin-bottom: 10px;
+        height: 100%;
+      }
+      .answerImage {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+      .gridContainer {
+        max-width: 100%;
+        max-height: calc(100%-60px);
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        grid-gap: 30px;
+        margin: 10px;
+      }
+      .groupedQuestionHeads {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px;
+        font-weight: 700;
+        overflow: hidden;
+        cursor: pointer;
+      }
+      .groupedQuestionHeadsText {
+        white-space: nowrap;
+        overflow-x: auto;
+        max-height: 100%;
+        overflow-y: hidden;
+        padding: 10px;
+        border: 1px black solid;
+        border-radius: 4px;
+        background-color: #f0f0f0;
+        cursor: pointer;
+        z-index: 30;
+        box-shadow: 3px 3px 3px rgb(79, 79, 79);
+      }
+      .groupedQuestionHeadsText:hover{
+        background-color: #9b9b9b;
+      }
+      .landing-page {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        height: 100vh;
+        width: 100%;
+        background: linear-gradient(to bottom right, #092e0df3, #092e0d74);
+        position: fixed;
+        top: 0;
+        left: 0;
+      }
+      .form-container {
+        padding-top: 30vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        max-height: 70vh;
+      }
+      #loadingContainer{
+        padding-top: 40vh;
+        align-items: center;
+        text-align: center;
+        width: 100%;
+        font-size: 7vh;
+        transition: opacity 0.3s ease;
+        color: #000901;
+      }
+      #loadingContainer.hide{
+        opacity: 0;
+      }
+      #loginForm {
+        min-width: 350px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background: linear-gradient(to bottom right, #ffffff71, #092e0d8f);
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 4px 4px 6px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        transition: opacity 1.5s ease;
+      }
+      #loginForm.visible {
+        opacity: 1;
+      }
+      input[type="text"] {
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
+        padding: 8px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      #loginForm input[type="radio"]{
+        cursor: pointer;
+      }
+      #loginForm button.login-button {
+        background-color: #092e0d;
+        color: #d7d7d7;
+        padding: 10px 20px;
+        border: 1px solid #071f09;
+        border-radius: 4px;
+        font-size: 16px;
+        box-shadow: 2px 2px 5px rgb(74, 74, 74);
+      }
+      input:-webkit-autofill,
+      input:-webkit-autofill:hover,
+      input:-webkit-autofill:focus {
+          -webkit-text-fill-color: inherit;
+          transition: background-color 5000s ease-in-out 0s;
+      }
+      #loginForm button.login-button.inactive {
+        background-color: #919191;
+      }
+      #loginForm button.login-button.inactive:hover {
+        background-color: #919191;
+        border: 1px solid #898989;
+      }
+      #loginForm button.login-button:hover {
+        background-color: #071f09;
+        box-shadow: 3px 3px 5px rgb(74, 74, 74);
+      }
+      #welcomeMessageContainer{
+        position: absolute;
+        width: 80%;
+        height: 20%;
+        max-height: 25vh;
+        left: 10%;
+        top: 5%;
+        text-align: center;
+        font-size: 5vh;
+        font-weight: 550;
+        border-radius: 6px;
+        background: linear-gradient(to bottom right, #ffffffb9, #092e0d91);
+        display: flex;
+        align-items: center;
+        box-shadow: 5px 2px 5px rgb(81, 81, 81);
+      }
+      .classButtonContainers {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+      }
+      .classButton {
+        width: 45%;
+        margin: 5px;
+        padding: 10px;
+        border: 1px solid rgb(62, 62, 62);
+        cursor: pointer;
+        box-shadow: 2px 2px 5px rgb(107, 107, 107);
+      }
+      .classButton:hover{
+        background-color: #979797;
+      }
+      .classButton.active {
+        background-color: #092e0d;
+        color: #ffffff;
+        padding: 9px;
+        border: 2px solid rgb(145, 145, 145);
+        box-shadow: 2px 2px 5px rgb(145, 145, 145);
+      }
+      .radio-container {
+        display: none;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+      .classSelection-container {
+        width: 100%;
+        display: flex;
+        align-items: right;
+        justify-content: space-between;
+        margin-bottom: 15px;
+      }
+      .classRadioContainers {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        vertical-align: middle;
+      }
+      .classRadioContainers input[type="radio"] {
+        margin-right: 5px;
+        margin-bottom: 3px;
+      }
+      .classRadioContainers label {
+        cursor: pointer;
+      }
+      .hidden {
+        display: none;
+      }
+      #nameInput {
+        margin-top: 5px;
+        margin-bottom: 20px;
+        font-size: 20px;
+        text-align: center;
+      }
+      #entryCodeInput {
+        margin-top: 5px;
+        margin-bottom: 15px;
+        font-size: 20px;
+        text-align: center;
+      }
+      .error-messages {
+        padding-left: 10px;
+        padding-right: 10px;
+        background-color: rgb(227, 124, 124);
+        margin-top: 5px;
+        border-radius: 5px;
+        border: 1px solid rgb(99, 42, 42);
+      }
+      .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        z-index: 999;
+      }
+      .overlay-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        text-align: center;
+      }
+      .confirmation-message {
+        margin-bottom: 20px;
+      }
+      .button-container {
+        display: flex;
+        justify-content: center;
+      }
+      .confirm-button,
+      .cancel-button {
+        padding: 10px 20px;
+        margin: 0 10px;
+      }
+      .confirm-button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .cancel-button {
+        background-color: #ccc;
+        color: #000;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button.question-active {
+        outline: 2px solid white;
+        outline-offset: -2px;
+      }
+      .outline {
+        position: absolute;
+        box-sizing: border-box;
+        border: 3px solid #FFFFCC;
+        border-radius: 8px;
+        transition: all 0.3s ease-in-out;
+      }
+      .outline2 {
+        position: absolute;
+        box-sizing: border-box;
+        border: 4px solid #FFFFCC;
+        border-radius: 6px;
+        transition: all 0.3s ease-in-out;
+        z-index: 20;
+      }
+      .answer-container {
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+        margin: 10px;
+        cursor: pointer;
+      }
+      .answer-container:hover {
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+        outline: 2px solid #092e0d;
+      }
+      .answer-selected {
+        box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.9);
+        outline: 2px solid #092e0d;
+      }
+      .section-selected {
+        outline: 2px solid #ffffff;
+      }
+      .close-button {
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        text-align: center;
+        border: 3px solid white;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
+        box-shadow: 1px 1px 5px #b7b7b75f, -1px -1px 5px #b7b7b75f;
+      }
+      .close-button:hover {
+        box-shadow: 2px 2px 2px #ffffff7c, -2px -2px 2px #ffffff7c;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loadingContainer">
+      <div>Loading something awesome...</div>
+    </div>
+    <div id="landingPage" class="landing-page">
+      <div id="welcomeMessageContainer">
+        Hello! Welcome to the AEVO PREP ACADEMY testing simulator. Please login below with the credentials provided by your instructor.
+      </div>
+      <div class="form-container">
+        <form id="loginForm" class="hidden">
+          <label for="nameInput">Your Name:</label>
+          <input type="text" id="nameInput" required>
+          <div class="classButtonContainers">
+            <button type="button" id="firstClassButton" name="classSelectionButton" class="hidden classButton"></button>
+            <button type="button" id="secondClassButton" name="classSelectionButton" class="hidden classButton"></button>
+          </div>
+          <label for="entryCodeInput">Entry Code:</label>
+          <input type="text" id="entryCodeInput" required>
+          <button type="button" class="login-button inactive" onclick="validateAndStart()">Submit</button>
+          <div id="errorMessages" class="hidden error-messages"></div>
+        </form>
+        <div id="doneTesting" class="hidden">
+          Done!
+        </div>
+      </div>
+    </div>
+    <div id="mainContent" style="display: none;">
+      <div id="topSection" class="thisDiv top-info-section info-section">
+      </div>
+      <div class="thisDiv middle-section">
+        <div class="thisDiv" id="sourceMaterialPane">
+          <div id="sourceMaterialHead"></div>
+        </div>
+        <div class="thisDiv" id="rpanrResize">
+          <img src="SliderHandle.png" id="resizeHandle" alt="Resize Handle">
+        </div>
+        <div class="thisDiv" id="QuestionPane">
+          <div id="QuestionPaneHead"></div>
+          <div id="QuestionPanePrompt"></div>
+          <div id="QuestionPaneAnswers"></div>
+        </div>
+      </div>
+      <div id="bottomTab" class="thisDiv bottom-info-section info-section">
+        <button id="backButton" onclick="goBack()">Back</button>
+        <div id="questionLinksContainer"></div>
+        <button id="nextButton" onclick="goNext()">Next</button>
+      </div>
+    </div>
+    <div id="endPage" style="display:none;">
+    
+    </div>
+    <div id="overlay" class="overlay">
+      <div class="overlay-content">
+        <div class="confirmation-message">Are you sure you want to proceed to the next section? You cannot return to previous sections.</div>
+        <div class="button-container">
+          <button class="confirm-button" onclick="confirmProceed()">Proceed</button>
+          <button class="cancel-button" onclick="cancelProceed()">Cancel</button>
+        </div>
+      </div>
+    </div>    
+    <div id="overlay2" class="overlay">
+      <div class="overlay-content">
+        <div id="confirmation-message" class="confirmation-message"></div>
+        <div class="button-container">
+          <button class="confirm-button" onclick="cancelProceed()">Okay</button>
+        </div>
+      </div>
+    </div> 
+    <div id="overlay3" class="overlay">
+      <div class="overlay-content">
+        <div class="confirmation-message">Time's up! (Sort of). You may continue working, this is just to help you get a feel for how long you will have on the real thing.</div>
+        <div class="button-container">
+          <button class="confirm-button" onclick="cancelProceed()">Got it</button>
+        </div>
+      </div>
+    </div>
+    <div id="overlay4" class="overlay">
+      <div class="overlay-content">
+        <div class="confirmation-message">Are you sure you want to end the test?</div>
+        <div class="button-container">
+          <button class="confirm-button" onclick="confirmEndTest()">End Test</button>
+          <button class="cancel-button" onclick="cancelProceed()">Keep Working</button>
+        </div>
+      </div>
+    </div>
+    <script>
+      let timer, overdueTimer, currentTime = 0;
+      let currentQuestionCard = 0;
+      let currentQuestionIndex = 0;
+      let currentSectionIndex = 0;
+      let categoriesGlobal = [];
+      let allData = {};
+      let lastQuestionViewedPerIndex = {};
+      let clickedAlready = false;
+      function loadAllData(){
+        const url = 'https://script.google.com/macros/s/AKfycbycd-dT6F0ATe9yxLwHWkXJsrA3YU2M_paTgyWSXWdaCSvInIQKbyfT0OMuzqcy7yXa/exec';
+        const XHR = new XMLHttpRequest();
+
+        XHR.onreadystatechange = function() {
+          if (XHR.readyState == 4) {
+            if (XHR.status == 200) {
+              const response  = JSON.parse(XHR.responseText);
+              allData = response;
+              updateLoginForm(response.loginData);
+            }
+          }
+        };
+
+        XHR.open("GET", url + ((/\?/).test(url) ? "&" : "?") + Date.now());
+        XHR.send();
+      }
+      function updateLoginForm(loginData) {
+        const firstClassId = loginData.firstClassId;
+        const secondClassId = loginData.secondClassId;
+        const submitButton = document.querySelector('.login-button');
+        const loginForm = document.getElementById('loginForm')
+        const firstClassButton = document.getElementById('firstClassButton');
+        const secondClassButton = document.getElementById('secondClassButton');
+        const loadingContainer = document.getElementById('loadingContainer');
+        document.getElementById('nameInput').addEventListener('input', checkForm);
+        document.getElementById('entryCodeInput').addEventListener('input', checkForm);
+        submitButton.classList.add('inactive');
+        loadingContainer.classList.add('hide')
+
+        if (secondClassId) {
+          firstClassButton.addEventListener('click', checkFormButtons);
+          secondClassButton.addEventListener('click', checkFormButtons);
+          firstClassButton.textContent = firstClassId;
+          secondClassButton.textContent = secondClassId;
+          const classButtons = document.querySelectorAll('.classButton');
+          classButtons.forEach(button => {
+            button.classList.remove('hidden');
+            button.addEventListener('click', function() {
+              classButtons.forEach(otherButton => {
+                if (otherButton !== this) {
+                  otherButton.classList.remove('active');
+                  otherButton.dataset.active = 'false';
+                }
+              });
+              this.classList.add('active');
+              this.dataset.active = 'true';
+            });
+          });
+        } else {
+          submitButton.dataset.singleClass = 'true';
+        }
+        loginForm.classList.add('visible')
+      }
+      function checkFormButtons(){
+        const name = document.getElementById('nameInput').value;
+        const entryCode = document.getElementById('entryCodeInput').value;
+        const submitButton = document.querySelector('.login-button');
+        const errorMessagesContainer = document.getElementById('errorMessages');
+
+        if((name&&entryCode)||errorMessagesContainer.innerText == 'Please select a class'){
+          submitButton.classList.remove('inactive');
+          errorMessagesContainer.innerHTML = '';
+          errorMessagesContainer.classList.add('hidden');
+          return;
+        }
+      }
+      function checkForm(){
+        const name = document.getElementById('nameInput').value;
+        const entryCode = document.getElementById('entryCodeInput').value;
+        const submitButton = document.querySelector('.login-button');
+        const singleClass = submitButton.dataset.singleClass === 'true';
+
+        const classButtons = document.querySelectorAll('.classButton');
+        const activeButton = Array.from(classButtons).find(button => button.dataset.active === 'true');
+        const errorMessagesContainer = document.getElementById('errorMessages');
+
+        if (!name||(!singleClass && !activeButton)||!entryCode) {
+          submitButton.classList.add('inactive');
+        }
+        else if(name&&(singleClass||!singleClass&&activeButton)&&entryCode){
+          submitButton.classList.remove('inactive');
+          errorMessagesContainer.innerHTML = '';
+          errorMessagesContainer.classList.add('hidden');
+          return;
+        }
+        if(name&&errorMessagesContainer.innerText == 'Please enter your name'){
+          errorMessagesContainer.innerHTML = '';
+          errorMessagesContainer.classList.add('hidden');
+          return;
+        }
+        if(entryCode&&errorMessagesContainer.innerText == 'Please enter the entry code'){
+          errorMessagesContainer.innerHTML = '';
+          errorMessagesContainer.classList.add('hidden');
+          return;
+        }
+      }
+      function validateAndStart() {
+        const name = document.getElementById('nameInput').value;
+        const entryCode = document.getElementById('entryCodeInput').value;
+        const submitButton = document.querySelector('.login-button');
+        const singleClass = submitButton.dataset.singleClass === 'true';
+        const classSelection = document.querySelector('input[name="classSelection"]:checked');
+
+        const errorMessagesContainer = document.getElementById('errorMessages');
+        errorMessagesContainer.innerHTML = '';
+
+        const classButtons = document.querySelectorAll('.classButton');
+        const activeButton = Array.from(classButtons).find(button => button.dataset.active === 'true');
+
+        if (!name) {
+          const errorMessage = document.createElement('p');
+          errorMessage.innerText = 'Please enter your name';
+          errorMessagesContainer.appendChild(errorMessage);
+          errorMessagesContainer.classList.remove('hidden');
+          return;
+        }
+
+        if (!singleClass && !activeButton) {
+          const errorMessage = document.createElement('p');
+          errorMessage.innerText = 'Please select a class';
+          errorMessagesContainer.appendChild(errorMessage);
+          errorMessagesContainer.classList.remove('hidden');
+          return;
+        }
+
+        if (!entryCode) {
+          const errorMessage = document.createElement('p');
+          errorMessage.innerText = 'Please enter the entry code';
+          errorMessagesContainer.appendChild(errorMessage);
+          errorMessagesContainer.classList.remove('hidden');
+          return;
+        }
+
+        const selectedClassId = singleClass ? allData.loginData.firstClassId : activeButton.textContent;
+        let isCorrectCode = false;
+
+        if (selectedClassId === allData.loginData.firstClassId) {
+          isCorrectCode = entryCode === allData.loginData.firstClassCode;
+        } else if (selectedClassId === allData.loginData.secondClassId) {
+          isCorrectCode = entryCode === allData.loginData.secondClassCode;
+        }
+
+        if (isCorrectCode) {
+          document.getElementById('landingPage').style.display = 'none';
+          document.getElementById('mainContent').style.display = 'block';
+
+          if (singleClass) {
+            buildTest(name,allData.classes.firstClass);
+          } else {
+            const selectedClass = selectedClassId === allData.loginData.firstClassId
+              ? allData.classes.firstClass
+              : allData.classes.secondClass;
+            buildTest(name,selectedClass);
+          }
+        } else {
+          const errorMessage = document.createElement('p');
+          errorMessage.innerText = 'Incorrect code entered. Please try again.';
+          errorMessagesContainer.appendChild(errorMessage);
+          errorMessagesContainer.classList.remove('hidden');
+        }
+      }
+      function startTimer(durationInSeconds) {
+        const timeRemainingBlock = document.getElementById('timeRemainingBlock');
+        let timeLeft = durationInSeconds;
+
+        if (timer) {
+          clearInterval(timer);
+        }
+
+        if (overdueTimer) {
+          clearInterval(overdueTimer);
+        }
+
+        function addNumbers(firstNumber, secondNumber) {
+          return firstNumber + secondNumber;
+        }
+
+        timer = setInterval(() => {
+          let minutes = Math.floor(timeLeft / 60);
+          let seconds = timeLeft % 60;
+
+          timeRemainingBlock.innerText = `Time Remaining: ${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+          currentTime = timeLeft;
+
+          if (timeLeft <= 0) {
+            clearInterval(timer);
+            document.getElementById('overlay3').style.display = 'flex';
+            let countUpTime = 0;
+            overdueTimer = setInterval(() => {
+              let overdueMinutes = Math.floor(countUpTime / 60);
+              let overdueSeconds = countUpTime % 60;
+              timeRemainingBlock.style.color = '#FFFFCC';
+              timeRemainingBlock.style.fontWeight = 400
+              timeRemainingBlock.innerText = `Time Overdue: -${overdueMinutes.toString().padStart(2, '0')}:${overdueSeconds.toString().padStart(2, '0')}`;
+              currentTime = -countUpTime;
+              countUpTime++;
+            }, 1000);
+            return;
+          }
+
+          timeLeft--;
+        }, 1000);
+      }
+      function goBack() {
+        if (currentQuestionIndex > 0) {
+          currentQuestionIndex--;
+        } else if (currentQuestionCard > 0) {
+          currentQuestionCard--;
+          currentQuestionIndex = data[currentQuestionCard].questions.length - 1;
+        } else {
+          return;
+        }
+        let activeButton = document.getElementById(`bottomButton${currentQuestionCard}`);
+        activeButton.click();
+        let thisButtonRange = activeButton.getAttribute('data-button-range');
+        updateContent(currentQuestionCard, thisButtonRange);
+        loadQuestion(currentQuestionCard, currentQuestionIndex);
+      }
+      function goNext() {
+        if (currentQuestionIndex < data[currentQuestionCard].questions.length - 1) {
+          currentQuestionIndex++;
+        } else if (currentQuestionCard < data.length - 1) {
+          currentQuestionCard++;
+          currentQuestionIndex = 0;
+        } else {
+          return;
+        }
+        let activeButton = document.getElementById(`bottomButton${currentQuestionCard}`);
+        activeButton.click();
+        let thisButtonRange = activeButton.getAttribute('data-button-range');
+        updateContent(currentQuestionCard, thisButtonRange);
+        loadQuestion(currentQuestionCard, currentQuestionIndex);
+      }
+      function updateActiveQuestionButton(newActiveIndex) {
+          const questionLinksContainer = document.getElementById('questionLinksContainer');
+          const activeButton = document.getElementById('activeQuestionButton');
+          if (activeButton) {
+            activeButton.removeAttribute('id');
+          }
+          questionLinksContainer.children[newActiveIndex].id = 'activeQuestionButton';
+      }
+      function endTest(){
+        const overlay4 = document.getElementById('overlay4');
+        overlay4.style.display = 'flex';
+      }
+      function confirmEndTest(){
+        document.getElementById('landingPage').style.display = 'block';
+        document.getElementById('overlay4').style.display = 'none';
+        document.getElementById('mainContent').style.display = 'none';
+        document.getElementById('welcomeMessageContainer').style.display = 'none';
+        document.getElementById('loginForm').style.display = 'none';
+        const doneTesting = document.getElementById('doneTesting');
+        doneTesting.style.display = 'block';
+        doneTesting.classList.add('visible');
+        reportAnswers();
+      }
+      function reportAnswers() {
+        const studentName = document.getElementById('studentBlock').innerText.split('Student: ')[1];
+        let outputString = Object.keys(userChoices)
+          .sort((a, b) => {
+            let [a1, a2] = a.split('-').map(Number);
+            let [b1, b2] = b.split('-').map(Number);
+            return a1 - b1 || a2 - b2;
+          })
+          .map((key, index) => {
+            return `${index + 1},${userChoices[key]}`;
+          })
+          .join(',');
+        let time = categoriesGlobal[currentSectionIndex].time-currentTime/60
+        const params = {answers: outputString, studentName, category: categoriesGlobal[currentSectionIndex].name, time};
+        const data = JSON.stringify(params);
+        const url = 'https://script.google.com/macros/s/AKfycbycd-dT6F0ATe9yxLwHWkXJsrA3YU2M_paTgyWSXWdaCSvInIQKbyfT0OMuzqcy7yXa/exec?data='+data;
+        test(encodeURI(url))
+        function test(url) {
+          var XHR = new XMLHttpRequest();
+          XHR.onreadystatechange = function() {
+            if(XHR.readyState == 4) {
+              if(XHR.status == 200) {
+                console.log(XHR.responseText);
+              }
+            }
+          }
+          XHR.open("GET", url + ((/\?/).test(url) ? "&" : "?") + Date.now());
+          XHR.send();
+          return;
+        }
+      }
+
+      let data = [];
+      let questionsAnsweredState = [];
+      let userChoices = {};
+      function buildTest(name,selectedClass){
+        categoriesGlobal = selectedClass.categories
+        assignSections(name,categoriesGlobal)
+        getQuestionCards(categoriesGlobal[0])
+      }
+      function getQuestionCards(category){
+        userChoices = {};
+        clickedAlready = false;
+        data = category.questionCards
+        questionsAnsweredState = new Array(data.length).fill(false);
+        buildBottomSection(data)
+        setTimeout(() => {
+          let thisButtonRange = document.getElementById('bottomButton0').getAttribute('data-button-range');
+          updateContent(currentQuestionCard,thisButtonRange)
+        }, 300)
+        startTimer(category.time*60)
+        if(currentSectionIndex==document.querySelectorAll(".sectionBlock").length-1){
+          setTimeout(() => {
+            showQuit();
+          }, 1000*60*3)
+        }
+      }
+      function showOverlay(index) {
+        const overlay2 = document.getElementById('overlay2');
+        if (index < currentSectionIndex){
+          document.getElementById('confirmation-message').innerText = 'You cannot return to previous sections.'
+          overlay2.style.display = 'flex';
+        }
+        else if(index == currentSectionIndex){
+          document.getElementById('confirmation-message').innerText = 'You are already on that section!'
+          overlay2.style.display = 'flex';
+        }
+        else{
+          const overlay = document.getElementById('overlay');
+          overlay.style.display = 'flex';
+        }
+      }
+
+      function hideOverlay() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('overlay2').style.display = 'none';
+        document.getElementById('overlay3').style.display = 'none';
+        document.getElementById('overlay4').style.display = 'none';
+      }
+
+      function confirmProceed() {
+        currentQuestionCard = 0;
+        currentQuestionIndex = 0;
+        let sections = document.querySelectorAll(".sectionBlock");
+        sections.forEach((sec) => {
+          sec.classList.remove("section-selected");
+        });
+        hideOverlay();
+        reportAnswers();
+        currentSectionIndex++;
+        sections[currentSectionIndex].classList.add("section-selected");
+        getQuestionCards(categoriesGlobal[currentSectionIndex]);
+      }
+      function showQuit(){
+        const topContainer = document.getElementById('topSection');
+
+        const closeButton = document.createElement('div');
+        closeButton.classList.add('close-button');
+        closeButton.innerText = 'X';
+
+        closeButton.addEventListener('click', () => {
+          endTest();
+        });
+
+        topContainer.appendChild(closeButton);
+      }
+      function cancelProceed() {
+        hideOverlay();
+      }
+      function assignSections(name,categories) {
+        const topContainer = document.getElementById('topSection');
+        const studentBlock = document.createElement('div');
+        studentBlock.id = 'studentBlock';
+        studentBlock.innerText = "Student: " + name;
+        topContainer.appendChild(studentBlock)
+
+        categories.forEach((category, index) => {
+          const section = document.createElement('div');
+          section.classList.add('sectionBlock');
+          section.innerHTML = category.name;
+          section.addEventListener('click', () => {
+            showOverlay(index);
+          });
+          if (index === currentSectionIndex) {
+            section.classList.add("section-selected");
+          }
+          topContainer.appendChild(section);
+        });
+
+        const timeRemainingBlock = document.createElement('div')
+        timeRemainingBlock.id = 'timeRemainingBlock'
+        topContainer.appendChild(timeRemainingBlock)
+      }
+      function updateContent(index,thisButtonRange){
+        clearContent();
+        insertParagraphs(index,thisButtonRange);
+        insertQuestions(index,thisButtonRange);
+        adjustFontSize();
+      }
+      function clearContent() {
+        const sourceMaterialPane = document.getElementById("sourceMaterialPane");
+        const QuestionPane = document.getElementById("QuestionPane");
+        const QuestionPaneHead = document.getElementById("QuestionPaneHead");
+        while (sourceMaterialPane.children.length > 1) {
+          sourceMaterialPane.removeChild(sourceMaterialPane.lastChild);
+        }
+        for (let i = QuestionPane.children.length - 1; i >= 0; i--) {
+          const child = QuestionPane.children[i];
+          if (child.id !== "QuestionPaneHead" && child.id !== "QuestionPanePrompt" && child.id !== "QuestionPaneAnswers") {
+            QuestionPane.removeChild(child);
+          }
+        }
+        while (QuestionPaneHead.firstChild) {
+          QuestionPaneHead.removeChild(QuestionPaneHead.firstChild);
+        }
+      }
+      function isGroupComplete(groupIndex) {
+        let questions = data[groupIndex].questions;
+        for (let i = 0; i < questions.length; i++) {
+          if (userChoices[`${groupIndex}-${i}`] === 'n/a') {
+            return false;
+          }
+        }
+        return true;
+      }
+      function updateButtonColors() {
+        const questionLinksContainer = document.getElementById('questionLinksContainer');
+        const buttons = questionLinksContainer.getElementsByTagName('button');
+        for(let button of buttons){
+          let questionGroupIndex = Array.prototype.indexOf.call(buttons, button);
+          let groupCompletionPercentage = calculateGroupCompletionPercentage(questionGroupIndex);
+          button.style.background = `linear-gradient(to right, #267e98 0%, #267e98 ${groupCompletionPercentage}%, #f0f0f0 ${groupCompletionPercentage}%, #f0f0f0 100%)`;
+        }
+      }
+      function calculateGroupCompletionPercentage(groupIndex) {
+        let questions = data[groupIndex].questions;
+        let answeredQuestions = 0;
+        for (let i = 0; i < questions.length; i++) {
+          if (userChoices[`${groupIndex}-${i}`] !== 'n/a') {
+            answeredQuestions++;
+            const textDiv = document.getElementById(`q${groupIndex}-${i}`);
+            if (textDiv) {
+              textDiv.style.backgroundColor = '#267e98';
+            }
+          }
+        }
+        return (answeredQuestions / questions.length) * 100;
+      }
+      function buildBottomSection(data){
+        const questionLinksContainer = document.getElementById('questionLinksContainer');
+        while (questionLinksContainer.firstChild) {
+          questionLinksContainer.removeChild(questionLinksContainer.firstChild);
+        }
+        let outline = document.createElement('div');
+        outline.id = 'outline';
+        outline.classList.add('outline')
+        questionLinksContainer.appendChild(outline);
+        let totalQuestions = 0;
+        lastQuestionViewedPerIndex = {}
+        for (let i = 0; i < data.length; i++) {
+          for(let j = 0; j < data[i].numQuestions; j++){
+            let key = `${i}-${j}`;
+            if(!userChoices[key]){
+              userChoices[key] = 'n/a';
+            }
+          }
+          const questionNumber = document.createElement('button');
+          questionNumber.id = `bottomButton${i}`;
+          questionNumber.style.background = "linear-gradient(to right, #f0f0f0 0%, #f0f0f0 100%)";
+          questionNumber.progress = 0;
+          totalQuestions += data[i].numQuestions;
+          let thisButtonRange = totalQuestions;
+          questionLinksContainer.appendChild(questionNumber);
+          lastQuestionViewedPerIndex[i]=0
+
+          if(data[i].numQuestions==1){
+            questionNumber.textContent = thisButtonRange;
+            questionNumber.setAttribute('data-button-range', ' #'+thisButtonRange);
+            questionNumber.addEventListener('click', () => {
+              updateContent(i,' #'+thisButtonRange);
+              const activeButton = document.querySelector('.question-active');
+              if (activeButton) {
+                activeButton.classList.remove('question-active');
+              }
+              questionNumber.classList.add('question-active');
+              const questionRect = questionNumber.getBoundingClientRect();
+              const parentRect = questionLinksContainer.getBoundingClientRect();
+
+              const relativeTop = questionRect.top - parentRect.top;
+              const relativeLeft = questionRect.left - parentRect.left;
+
+              outline.style.width = `${questionNumber.offsetWidth+8}px`;
+              outline.style.height = `${questionNumber.offsetHeight+8}px`;
+              outline.style.left = `${relativeLeft-4}px`;
+              outline.style.top = `${relativeTop-4}px`;
+              loadQuestion(i,lastQuestionViewedPerIndex[i])
+            });
+          }
+          else{
+            thisButtonRange = totalQuestions - data[i].numQuestions + 1 + " - " + totalQuestions;
+            questionNumber.textContent = thisButtonRange;
+            questionNumber.setAttribute('data-button-range', 's #'+thisButtonRange);
+            questionNumber.addEventListener('click', () => {
+              updateContent(i,'s #'+thisButtonRange);
+              const activeButton = document.querySelector('.question-active');
+              if (activeButton) {
+                activeButton.classList.remove('question-active');
+              }
+              questionNumber.classList.add('question-active');
+              const questionRect = questionNumber.getBoundingClientRect();
+              const parentRect = questionLinksContainer.getBoundingClientRect();
+
+              const relativeTop = questionRect.top - parentRect.top;
+              const relativeLeft = questionRect.left - parentRect.left;
+
+              outline.style.width = `${questionNumber.offsetWidth+8}px`;
+              outline.style.height = `${questionNumber.offsetHeight+8}px`;
+              outline.style.left = `${relativeLeft-4}px`;
+              outline.style.top = `${relativeTop-4}px`;
+              setTimeout(() => {
+                loadQuestion(i,lastQuestionViewedPerIndex[i])
+              },100)
+            });
+          }
+        }
+        setTimeout(() => {
+          let firstBottomButton = document.getElementById('bottomButton0')
+          firstBottomButton.classList.add('question-active');
+          const questionRect = firstBottomButton.getBoundingClientRect();
+          const parentRect = questionLinksContainer.getBoundingClientRect();
+
+          const relativeTop = questionRect.top - parentRect.top;
+          const relativeLeft = questionRect.left - parentRect.left;
+
+          outline.style.width = `${firstBottomButton.offsetWidth+8}px`;
+          outline.style.height = `${firstBottomButton.offsetHeight+8}px`;
+          outline.style.left = `${relativeLeft-4}px`;
+          outline.style.top = `${relativeTop-4}px`;
+        }, 100)
+      }
+      function loadQuestion(questionCard,questionIndex){
+        updateOutline(document.getElementById(`qh${questionCard}-${lastQuestionViewedPerIndex[questionCard]}`));
+        lastQuestionViewedPerIndex[questionCard]=questionIndex;
+        currentQuestionCard = questionCard;
+        currentQuestionIndex = questionIndex;
+        let questions = data[questionCard].questions;
+        let question = questions[questionIndex];
+        let prompt = question[0];
+        let answers = question.slice(1, -1);
+        document.getElementById("QuestionPanePrompt").innerText = prompt;
+        const QuestionPaneAnswers = document.getElementById("QuestionPaneAnswers");
+        QuestionPaneAnswers.innerHTML = '';
+
+        const isImageAnswer = answers.some(answer => answer.includes('=IMAGE'));
+        if(isImageAnswer){
+          const gridContainer = document.createElement("div");
+          gridContainer.id = 'gridContainer';
+          gridContainer.classList.add('gridContainer');
+          QuestionPaneAnswers.style.display = "flex";
+          QuestionPaneAnswers.appendChild(gridContainer);
+        }
+        else{
+          QuestionPaneAnswers.style.display = "block";
+        }
+
+        answers.forEach((answer, index) => {
+          const answerContainer = document.createElement("div");
+          answerContainer.classList.add("answer-container");
+
+          if (isImageAnswer) {
+            answerContainer.classList.add("answerGrid");
+            answerContainer.style.backgroundColor = "#d8d8d895";
+          }
+          else{
+            answerContainer.style.padding = "15px";
+            answerContainer.style.backgroundColor = "#2259ff17";
+          }
+
+          const radioButton = document.createElement("input");
+          radioButton.type = "radio";
+          radioButton.name = "answer";
+          radioButton.id = "answer_" + index;
+          radioButton.value = index;
+          radioButton.style.display = "none";
+          answerContainer.appendChild(radioButton);
+          answerContainer.addEventListener("click", () => {
+            radioButton.click();
+            document.querySelectorAll(".answer-container").forEach((container) => {
+              container.classList.remove("answer-selected");
+            });
+            answerContainer.classList.add("answer-selected");
+          });
+          let letters = ['A','B','C','D']
+          radioButton.addEventListener("click", () => {
+            userChoices[`${questionCard}-${questionIndex}`] = letters[index];
+            updateButtonColors();
+          });
+
+          if (userChoices[`${questionCard}-${questionIndex}`] === letters[index]) {
+            radioButton.checked = true;
+            answerContainer.classList.add("answer-selected");
+          }
+
+          if(answer.startsWith("=IMAGE")){
+            const answerImage = document.createElement("img");
+            answerImage.src = answer.split('IMAGE(')[1].split('"')[1];
+            answerImage.classList.add("answerImage");
+            answerContainer.appendChild(answerImage);
+          }
+          else{
+            const answerLabel = document.createElement("label");
+            answerLabel.htmlFor = "answer_" + index;
+            answerLabel.innerText = '   ' + answer;
+            answerContainer.appendChild(answerLabel);
+          }
+
+          if (isImageAnswer) {
+            document.getElementById('gridContainer').appendChild(answerContainer);
+          } else {
+            QuestionPaneAnswers.appendChild(answerContainer);
+          }
+        });
+        updateGridContainerMaxHeight();
+      }
+      function insertQuestions(index,thisButtonRange) {
+        let questions = data[index].questions;
+        let numQuestions = questions.length;
+        const QuestionPane = document.getElementById("QuestionPane");
+        const QuestionPaneHead = document.getElementById("QuestionPaneHead");
+        const bottomDiv = document.createElement("div");
+        bottomDiv.style.marginTop = "20px";
+        QuestionPane.insertBefore(bottomDiv, QuestionPaneHead.nextSibling);
+        let QuestionPaneHeadWidth = window.getComputedStyle(QuestionPaneHead).getPropertyValue('width')
+        let QuestionPaneHeadWidthValue = parseFloat(QuestionPaneHeadWidth);
+        let panelFontSize = (QuestionPaneHeadWidthValue - 300) * (24 - 12) / (800 - 300) + 12;
+        let indices = rangeToArray(thisButtonRange);
+
+        const outline = document.createElement('div');
+        outline.id = 'outline-head';
+        outline.classList.add('outline2');
+        outline.style.visibility = 'hidden';
+        QuestionPaneHead.appendChild(outline);
+
+        if(indices.length==1){
+          const div = document.createElement("div");
+          div.classList.add("groupedQuestionHeads");
+          div.style.fontSize = panelFontSize;
+          div.style.width = "100%";
+          div.id = `qh${index}-0`;
+
+          const textDiv = document.createElement("div");
+          textDiv.classList.add("groupedQuestionHeadsText");
+          textDiv.id = `q${index}-0`;
+          textDiv.textContent = "Question " + indices[0];
+          if (userChoices[`${index}-0`] !== 'n/a') {
+            textDiv.style.backgroundColor = '#267e98';
+          }
+          div.addEventListener("click", () => {
+            loadQuestion(index, 0);
+            updateOutline(div);
+          });
+          div.appendChild(textDiv);
+
+          QuestionPaneHead.appendChild(div);
+        }
+        else{
+          for (i = questions.length; i > 0; i--) {
+            const reverseInd = numQuestions - i;
+            const div = document.createElement("div");
+            div.classList.add("groupedQuestionHeads");
+            div.style.fontSize = panelFontSize;
+            div.style.width = (1 / numQuestions) * 100 + "%";
+            div.id = `qh${index}-${indices[reverseInd]-indices[0]}`;
+
+            const textDiv = document.createElement("div");
+            textDiv.classList.add("groupedQuestionHeadsText");
+            textDiv.id = `q${index}-${indices[reverseInd]-indices[0]}`;
+            textDiv.textContent = "Question " + indices[reverseInd];
+            if (userChoices[`${index}-${indices[reverseInd]-indices[0]}`] !== 'n/a') {
+              textDiv.style.backgroundColor = '#267e98';
+            }
+            div.addEventListener("click", () => {
+              loadQuestion(index, indices[reverseInd]-indices[0]);
+              updateOutline(div);
+            });
+            div.appendChild(textDiv);
+
+            QuestionPaneHead.appendChild(div);
+          }
+        }
+        setTimeout(() => {
+          if(!clickedAlready){
+            document.querySelector(".groupedQuestionHeads").click();
+            clickedAlready = true
+          }
+          updateOutline(document.getElementById(`qh${index}-${lastQuestionViewedPerIndex[index]}`));
+        }, 50);
+      }
+      function updateOutline(element) {
+        let outline = document.getElementById('outline-head')
+        let groupedQuestionWidth = parseFloat(window.getComputedStyle(document.querySelector(".groupedQuestionHeads")).getPropertyValue('width'));
+        let groupedQuestionTextWidth = parseFloat(window.getComputedStyle(document.querySelector(".groupedQuestionHeadsText")).getPropertyValue('width'));
+        let elementStyle = window.getComputedStyle(element)
+        const rect = element.getBoundingClientRect();
+        const parentRect = element.parentNode.getBoundingClientRect();
+        const relativeTop = rect.top - parentRect.top;
+        const relativeLeft = rect.left - parentRect.left;
+        outline.style.width = `${groupedQuestionTextWidth+14}px`;
+        outline.style.height = `${element.offsetHeight-4}px`;
+        outline.style.left = `${relativeLeft+(groupedQuestionWidth-groupedQuestionTextWidth)/2-7}px`;
+        outline.style.visibility = 'visible';
+      }
+      function rangeToArray(str) {
+        let string = str.toString().split('#')[1];
+        if(typeof string != undefined){
+          const parts = string.split('-');
+          const start = parseInt(parts[0]);
+          const end = parseInt(parts[1] || parts[0]);
+          const result = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+          return result;
+        }
+        else return [string];
+      }
+      function adjustFontSize() {
+        let QuestionPaneHeadWidth = window.getComputedStyle(QuestionPaneHead).getPropertyValue('width');
+        let QuestionPaneHeadWidthValue = parseFloat(QuestionPaneHeadWidth);
+        const elements = document.querySelectorAll(".groupedQuestionHeadsText");
+        let panelFontSize = (QuestionPaneHeadWidthValue - 300) * (24 - 10) / (800 - 300) + 10;
+        elements.forEach((element) => {
+          element.style.fontSize = panelFontSize + "px";
+        });
+
+        const sourceMaterialHead = document.getElementById('sourceMaterialHead');
+        let maxWidth = window.getComputedStyle(sourceMaterialHead).getPropertyValue('width');
+        let maxWidthValue = parseFloat(maxWidth);
+        let newFontSize = (maxWidthValue - 100) * (20 - 10) / (480 - 150) + 8;
+        sourceMaterialHead.style.fontSize = newFontSize + "px";
+      }
+      function insertParagraphs(index,thisButtonRange) {
+        let text = data[index].sourceMaterial
+        const sourceMaterialPane = document.getElementById("sourceMaterialPane");
+        const sourceMaterialHead = document.getElementById("sourceMaterialHead");
+        sourceMaterialHead.innerHTML = 'The following material is for question'+thisButtonRange;
+        const paragraphs = text.split('\n').filter(p => p.trim() !== '');
+        paragraphs.reverse()
+        const bottomDiv = document.createElement("div")
+        bottomDiv.id = 'bottomDivId';
+        bottomDiv.style.marginTop = "20px";
+        sourceMaterialPane.insertBefore(bottomDiv, sourceMaterialHead.nextSibling);
+        paragraphs.forEach(paragraph => {
+          const div = document.createElement("div");
+          if(/=IMAGE/i.test(paragraph)){
+            bottomDiv.style.marginTop = "0px";
+            const div5 = document.createElement("div");
+            div.appendChild(div5);
+            div5.style.width = "100%";
+            const sourceMaterialPaneRect = sourceMaterialPane.getBoundingClientRect();
+            const sourceMaterialHeadRect = sourceMaterialHead.getBoundingClientRect();
+            const div4Height = sourceMaterialPaneRect.height - sourceMaterialHeadRect.height - 22;
+            div5.style.height = `${div4Height}px`;
+            div5.style.paddingLeft = "10px";
+            div5.style.paddingRight = "10px";
+            div5.style.color = "rgba(16, 16, 16, .7)";
+            const img = document.createElement("img");
+            img.src = paragraph.split('IMAGE(')[1].split('"')[1];
+            img.style.width = "100%";
+            img.style.height = "100%";
+            img.style.objectFit = "contain";
+            div5.appendChild(img);
+          }
+          else if(/^\d+\./.test(paragraph)){
+            const paragraphNum = 'P'+paragraph.slice(0,2).trim();
+            const paragraphText = paragraph.slice(2).trim();
+            const div2 = document.createElement("div");
+            const div3 = document.createElement("div");
+            div.appendChild(div2);
+            div.appendChild(div3);
+            div2.textContent = paragraphNum;
+            div2.style.width = "10%";
+            div2.style.textAlign = "center";
+            div3.textContent = paragraphText;
+            div3.style.width = "90%";
+            div3.style.textIndent = "30px";
+            div3.style.paddingRight = "20px";
+            div3.style.paddingLeft = "10px";
+          }
+          else{
+            const div4 = document.createElement("div");
+            div.appendChild(div4);
+            div4.style.width = "100%";
+            div4.style.paddingLeft = "10px";
+            div4.style.paddingRight = "10px";
+            if(/~/.test(paragraph))div4.style.fontStyle = "italic";
+            div4.style.color = "rgba(16, 16, 16, .7)";
+            div4.textContent = paragraph.split('~')[1];
+          }
+          div.style.width = "100%";
+          div.classList.add("sourceMaterialParagraphs");
+          sourceMaterialPane.insertBefore(div, sourceMaterialHead.nextSibling);
+        });
+      }
+      let ismdwn = 0
+      let rpanrResize = document.getElementById('rpanrResize');
+      let resizeHandle = document.getElementById('resizeHandle');
+      let sourceMaterialPane = document.getElementById('sourceMaterialPane');
+      let QuestionPane = document.getElementById('QuestionPane');
+      let body = document.body;
+      let windowWidth = window.innerWidth;
+      document.body.addEventListener('mousemove', mV)
+      document.body.addEventListener('mouseup', end)
+      rpanrResize.addEventListener('mousedown', mD)
+      resizeHandle.addEventListener('mousedown', mD)
+
+      function mD(event) {
+        event.preventDefault();
+        ismdwn = 1;
+        body.classList.add("no-select");
+      }
+
+      function end() {
+        ismdwn = 0;
+        body.classList.remove("no-select");
+      }
+
+      function mV(event) {
+        if (ismdwn === 1) {
+          let leftWidth = (event.clientX - 6) + "px";
+          let rightWidth = (windowWidth - event.clientX) + "px";
+          if (event.clientX < windowWidth * 0.2) {
+            leftWidth = (windowWidth * 0.2) + "px"
+            rightWidth = (windowWidth * 0.8) + "px"
+            sourceMaterialPane.style.flexBasis = leftWidth
+            QuestionPane.style.flexBasis = rightWidth
+          } else if (event.clientX > windowWidth * 0.6){
+            leftWidth = (windowWidth * 0.6) + "px"
+            rightWidth = (windowWidth * 0.4) + "px"
+            sourceMaterialPane.style.flexBasis = leftWidth
+            QuestionPane.style.flexBasis = rightWidth
+          } else {
+            sourceMaterialPane.style.flexBasis = leftWidth;
+            QuestionPane.style.flexBasis = rightWidth;
+          }
+          updateGridContainerMaxHeight();
+          adjustFontSize();
+          updateOutline(document.getElementById(`qh${currentQuestionCard}-${lastQuestionViewedPerIndex[currentQuestionCard]}`));
+        } else {
+          end();
+        }
+      }
+      function updateGridContainerMaxHeight() {
+        const gridContainer = document.getElementById("gridContainer");
+        const QuestionPaneAnswers = document.getElementById("QuestionPaneAnswers");
+        if(gridContainer){
+          const QuestionPaneHead = document.getElementById("QuestionPaneHead");
+          const QuestionPanePrompt = document.getElementById("QuestionPanePrompt");
+          const headHeight = QuestionPaneHead.offsetHeight;
+          const promptHeight = QuestionPanePrompt.offsetHeight;
+
+          const maxHeight = window.innerHeight * 0.8 - headHeight - promptHeight - 50;
+          gridContainer.style.maxHeight = `${maxHeight}px`;
+          QuestionPaneAnswers.style.maxHeight = `${maxHeight}px`;
+        }
+      }
+      window.onload = loadAllData();
+    </script>
+  </body>
